@@ -1,0 +1,23 @@
+#add-record{
+    background: none;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+#add-user-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 30px;
+    height: 30px;
+    padding-left: 3px;
+    
+}
+#add-user-icon{
+    width: 20px;
+    height: 20px;
+    border-left: 1px solid #222;
+    padding-left: 5px;
+}
