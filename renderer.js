@@ -1,5 +1,3 @@
-// Search
-
 let datas = [
     { label: "Reino Unido", value: "UK" },
     { label: "Mexico", value: "MX" },
@@ -9,8 +7,8 @@ let datas = [
 
 const autocomplete = window.libs.autocompleter
 
-let input = document.getElementById("search-input")
-
+const input = document.getElementById("search-input")
+const addPatient = document.getElementById("add-record")
 autocomplete({
     input: input,
     fetch: function(text, update) {
@@ -24,4 +22,27 @@ autocomplete({
         input.value = item.label
     }
 })
+
+
+
+addPatient.addEventListener("click", async() => {
+    const folderName = input.value.trim()
+    const statusElement = document.getElementById("status")
+
+
+    if(!folderName) {
+        statusElement.textContent = "Por favor, ingresa un nombre para la carpeta"
+        return
+    }
+    statusElement.textContent = "Creando carpeta..."
+
+    const result =  await window.func.createFolder(folderName)
+    if(result.success) {
+        statusElement.textContent = `Carpeta creada con exito, ID:${result.id}`
+    } else {
+        statusElement.textContent = `Error al crear la carpeta, ID:${result.id}`
+    }
+
+})
+
 
