@@ -54,20 +54,35 @@ const createWindow = () => {
 // })
 
 
-ipcMain.handle("create-folder", async (event, folderName) => {
+ipcMain.handle("create-folder", async (event, folderName, parentFolderId=null) => {
     try {
+        const auth = new google.auth.GoogleAuth({
+            keyFile: path.join(__dirname, 'credentials.json'),
+            scopes: ['https://www.googleapis.com/auth/drive'],
+        });
+
+        const drive = google.drive({ version: 'v3', auth });
+
+        const fileMetadata = {
+            name: folderName,
+            mimeType: 'application/vnd.google-apps.folder',
+            parents: ["1r1D96SKsIRuLc_CtcFbOmvnTBR7esAxi"]
+        };
+
+        if (parentFolderId) {
+            fileMetadata.parents = [parentFolderId];
+        }
+
         const response = await drive.files.create({
-            resource: {
-                name: folderName,
-                mimeType: "application/vnd.google-apps.folder"
-            },
-            fields: "id"
-        })
-        const folderId = response.data.id
-        return { success: true, id: folderId }
+            resource: fileMetadata,
+            fields: 'id',
+        });
+
+        console.log('Carpeta creada, ID:', response.data.id);
+        return response.data.id;
     } catch (error) {
-        console.error("error al crear la carpeta:", error.response?.data || error.message)
-        return { success: false, message: error.message}
+        console.error('Error al crear la carpeta:', error.response?.data || error.message);
+        throw error; // Lanza el error para que puedas manejarlo en la UI si es necesario
     }
 })
 
@@ -98,44 +113,44 @@ async function listFiles() {
 listFiles();
 
 
-async function createFolder(folderName, parentFolderId = null) {
-    try {
-        const auth = new google.auth.GoogleAuth({
-            keyFile: path.join(__dirname, 'credentials.json'),
-            scopes: ['https://www.googleapis.com/auth/drive'],
-        });
+// async function createFolder(folderName, parentFolderId = null) {
+//     try {
+//         const auth = new google.auth.GoogleAuth({
+//             keyFile: path.join(__dirname, 'credentials.json'),
+//             scopes: ['https://www.googleapis.com/auth/drive'],
+//         });
 
-        const drive = google.drive({ version: 'v3', auth });
+//         const drive = google.drive({ version: 'v3', auth });
 
-        const fileMetadata = {
-            name: folderName,
-            mimeType: 'application/vnd.google-apps.folder',
-            parents: ["1r1D96SKsIRuLc_CtcFbOmvnTBR7esAxi"]
-        };
+//         const fileMetadata = {
+//             name: folderName,
+//             mimeType: 'application/vnd.google-apps.folder',
+//             parents: ["1r1D96SKsIRuLc_CtcFbOmvnTBR7esAxi"]
+//         };
 
-        if (parentFolderId) {
-            fileMetadata.parents = [parentFolderId];
-        }
+//         if (parentFolderId) {
+//             fileMetadata.parents = [parentFolderId];
+//         }
 
-        const response = await drive.files.create({
-            resource: fileMetadata,
-            fields: 'id',
-        });
+//         const response = await drive.files.create({
+//             resource: fileMetadata,
+//             fields: 'id',
+//         });
 
-        console.log('Carpeta creada, ID:', response.data.id);
-        return response.data.id;
-    } catch (error) {
-        console.error('Error al crear la carpeta:', error.response?.data || error.message);
-        throw error; // Lanza el error para que puedas manejarlo en la UI si es necesario
-    }
-}
+//         console.log('Carpeta creada, ID:', response.data.id);
+//         return response.data.id;
+//     } catch (error) {
+//         console.error('Error al crear la carpeta:', error.response?.data || error.message);
+//         throw error; // Lanza el error para que puedas manejarlo en la UI si es necesario
+//     }
+// }
 
-// Llamada al método
-createFolder('fedelobo').then((folderId) => {
-    console.log('Nueva carpeta creada con ID:', folderId);
-}).catch((error) => {
-    console.error('Hubo un problema al crear la carpeta:', error);
-});
+// // Llamada al método
+// createFolder('fedelobo').then((folderId) => {
+//     console.log('Nueva carpeta creada con ID:', folderId);
+// }).catch((error) => {
+//     console.error('Hubo un problema al crear la carpeta:', error);
+// });
 
 
 

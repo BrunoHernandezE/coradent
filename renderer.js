@@ -37,8 +37,12 @@ addPatient.addEventListener("click", async() => {
     statusElement.textContent = "Creando carpeta..."
 
     const result =  await window.func.createFolder(folderName)
-    if(result.success) {
-        statusElement.textContent = `Carpeta creada con exito, ID:${result.id}`
+
+
+    console.log("Resultado perro", result);
+    
+    if(result) {
+        statusElement.textContent = `Registro creado correctamente: ${folderName}`
     } else {
         statusElement.textContent = `Error al crear la carpeta, ID:${result.id}`
     }
@@ -46,3 +50,6 @@ addPatient.addEventListener("click", async() => {
 })
 
 
+// addPatient.addEventListener("click", () => {
+//     window.func.navigateTo()
+// })
