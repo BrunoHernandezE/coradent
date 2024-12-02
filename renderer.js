@@ -50,6 +50,6 @@ addPatient.addEventListener("click", async() => {
 })
 
 
-// addPatient.addEventListener("click", () => {
-//     window.func.navigateTo()
-// })
+document.getElementById("boton-test").addEventListener("click", () => {
+    window.func.navigateTo()
+})

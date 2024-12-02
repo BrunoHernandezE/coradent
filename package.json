@@ -6,23 +6,30 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build-react": "babel components --out-dir dist"
+    "build-react": "npx babel src --out-dir dist --presets @babel/preset-env,@babel/preset-react"
   },
   "author": "Bruno",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^33.2.1"
-  },
-  "dependencies": {
     "@babel/cli": "^7.25.9",
     "@babel/core": "^7.26.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-react": "^7.25.9",
+    "babel-loader": "^9.2.1",
+    "electron": "^33.2.1",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.25.9",
     "autocompleter": "^9.3.2",
     "formik": "^2.4.6",
     "googleapis": "^144.0.0",
+    "pdf-lib": "^1.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "signature_pad": "^5.0.4",
     "yup": "^1.4.0"
   }
 }

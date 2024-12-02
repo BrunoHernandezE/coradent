@@ -1,6 +1,10 @@
 {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ]
-  }
+  // Usamos los presets adecuados para ES6 y React
+  "presets": [
+    "@babel/preset-env",
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ]
+}
