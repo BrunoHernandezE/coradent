@@ -37,6 +37,7 @@ addPatient.addEventListener("click", async() => {
     statusElement.textContent = "Creando carpeta..."
 
     const result =  await window.func.createFolder(folderName)
+    window.func.createRecord(folderName)
 
 
     console.log("Resultado perro", result);

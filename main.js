@@ -2,6 +2,9 @@ const { app, BrowserWindow, screen, ipcMain } = require("electron")
 const path = require("node:path")
 const fs = require("fs")
 const { google } = require("googleapis")
+const { PDFDocument } = require('pdf-lib');
+const SignaturePad = require("signature_pad")
+
 
 const SERVICE_ACCOUNT_FILE = path.join(__dirname, "credentials.json")
 
@@ -34,25 +37,29 @@ const createWindow = () => {
 }
 
 
-// ipcMain.on("create-record", (event, name) => {
-//     const basePath = path.join(__dirname, "examples");
-//     const carpetaPath= path.join(basePath, name);
+ipcMain.on("create-record", (event, name) => {
+    const basePath = path.join(__dirname, "examples");
+    const carpetaPath= path.join(basePath, name);
 
-//     try {
-//         if(!fs.existsSync(carpetaPath)) {
-//             fs.mkdirSync(carpetaPath)
-//             console.log(`Carpeta "${name}" creada con éxito.`);
+    try {
+        if(!fs.existsSync(carpetaPath)) {
+            fs.mkdirSync(carpetaPath)
+            console.log(`Carpeta "${name}" creada con éxito.`);
 
-//         } else {
-//             console.log(`La carpeta "${name}" ya existe.`);
-//         }
+        } else {
+            console.log(`La carpeta "${name}" ya existe.`);
+        }
         
-//     } catch (error) {
-//         console.error(`Error al crear la carpeta:`, error);
-//     }
+    } catch (error) {
+        console.error(`Error al crear la carpeta:`, error);
+    }
+})
 
-// })
 
+
+ipcMain.handle('init-signature', async (event, canvasId) => {
+    return `Canvas ${canvasId} listo para SignaturePad.`;
+  });   
 
 ipcMain.handle("create-folder", async (event, folderName, parentFolderId=null) => {
     try {
@@ -99,11 +106,25 @@ ipcMain.on("navigate-to", (event, targetPage) => {
         }
 
     })
-    newWindow.loadFile(path.join(__dirname, "views", "form.html"))
+    newWindow.loadFile(path.join(__dirname, "views", "signature.html"))
     //mainWindow.loadFile(path.join(__dirname, "views", "form.html"));
 })
 
-
+ipcMain.on("list-folders", (event, foldersPath) => {
+    try {
+        // Leer el contenido de la ruta
+        const contenido = fs.readdirSync(foldersPath, { withFileTypes: true });
+      
+        // Filtrar para obtener solo carpetas
+        const carpetas = contenido
+          .filter(item => item.isDirectory()) // Verifica si es una carpeta
+          .map(item => item.name);           // Obtén solo los nombres
+      
+        console.log('Carpetas encontradas:', carpetas);
+      } catch (error) {
+        console.error('Error al leer la ruta:', error.message);
+      }
+})
 
 
 
